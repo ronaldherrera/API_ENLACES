@@ -1,8 +1,12 @@
 //REQUERIMIENTOS
+///conecta con el modulo bcrypt
+const bcrypt = require('bcrypt');
+///conecta con el modulo jsonwebtoken
+const jwt = require('jsonwebtoken');
 ///conecta con el generador de errores
 const { generateError } = require('../helpers');
 ///conecta con la funcion "createUser" del archivo "../db/users"
-const { createUser, getUserById /*getUserByEmail*/ } = require('../db/users');
+const { createUser, getUserById, getUserByEmail } = require('../db/users');
 
 //FUNCION PARA CONTROLAR  USUARIO NUEVO
 const newUserController = async (req, res, next) => {
@@ -47,6 +51,7 @@ const getUserController = async (req, res, next) => {
 //FUNCION PARA CONTROLAR LOGIN
 const loginController = async (req, res, next) => {
   try {
+    //console.log(req.body);
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -54,19 +59,27 @@ const loginController = async (req, res, next) => {
     }
 
     ///recojo los datos de la base de datosdel usuario con ese email
-    //const user = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
 
     ///compruebo que las contraseñas coinciden
+    const validPassword = await bcrypt.compare(password, user.password);
 
+    if (!validPassword) {
+      throw generateError('La contraseña no coincide', 401);
+    }
     ///creo el playload del token
+    const payload = { id: user.id };
 
     ///firmo el token
+    const token = jwt.sign(payload, process.env.sectret, {
+      expiresIn: '30d',
+    });
 
     ///envio el token
 
     res.send({
-      status: 'error',
-      message: 'Not implemented',
+      status: 'ok',
+      data: token,
     });
   } catch (error) {
     next(error);

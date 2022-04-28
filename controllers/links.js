@@ -1,9 +1,10 @@
 //FUNCION PARA CONTROLAR LOS LINKS NUEVOS
 const newLinkController = async (req, res, next) => {
+  //console.log(req.headers);
   try {
     res.send({
-      status: 'error',
-      message: 'Not implemented',
+      status: 'ok',
+      message: 'nuevo link',
     });
   } catch (error) {
     next(error);

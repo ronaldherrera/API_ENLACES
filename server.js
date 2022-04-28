@@ -20,11 +20,12 @@ const {
   deleteLinkController,
 } = require('./controllers/links');
 
+const { authUser } = require('./middlewares/auth');
 const app = express();
 
 //APPS
 app.use(morgan('dev'));
-//app.use(express.json());
+app.use(express.json());
 
 //RUTAS DE USERS
 app.post('/user', newUserController); //listo
@@ -32,7 +33,7 @@ app.get('/user/:id', getUserController);
 app.post('/login', loginController);
 
 //RUTAS DE LINKS
-app.post('/', newLinkController);
+app.post('/', authUser, newLinkController);
 app.get('/', getLinksController);
 app.get('/link/:id', getSingleLinkController);
 app.delete('/link/:id', deleteLinkController);
