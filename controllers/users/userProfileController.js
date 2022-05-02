@@ -3,10 +3,10 @@ const { createPathIfNotExists } = require('../../helpers');
 const sharp = require('sharp');
 const { nanoid } = require('nanoid');
 const path = require('path');
-
+//foto perfil genérica default
 const userProfileController = async (req, res, next) => {
   try {
-    const { nombre, biografia, telefono, direccion } = req.body;
+    const { userName, nombre, email, imagen, biografia, telefono } = req.body;
     let imageFileName;
     console.log(req.files);
     if (req.files && req.files.image) {
@@ -23,11 +23,13 @@ const userProfileController = async (req, res, next) => {
       console.log(imageFileName);
     }
     await userProfile(
+      userName,
       nombre,
-      imageFileName,
+      email,
+      imagen,
       biografia,
       telefono,
-      direccion,
+
       req.userId
     );
     res.send({

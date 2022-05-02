@@ -1,4 +1,5 @@
-const { generateError, validateLogin } = require('../../helpers');
+const { generateError } = require('../../helpers');
+const { validateLogin } = require('../../validators/validateLogin');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { getUserByEmail } = require('../../db/users/getUserByEmail');
@@ -23,7 +24,7 @@ const loginController = async (req, res, next) => {
     const payload = { id: user.id };
     //Firmo el  token
     const token = jwt.sign(payload, process.env.SECRET);
-    res.setHeader('Authorization', token).send({
+    res.send({
       status: 'ok',
       data: token,
     });

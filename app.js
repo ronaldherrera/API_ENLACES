@@ -3,13 +3,14 @@ const express = require('express');
 const expressFileUpload = require('express-fileupload');
 const morgan = require('morgan');
 const { authUser } = require('./middlewares/auth');
+//Controladores usuarios
 const { getUserController } = require('./controllers/users/getUserController');
 const { loginController } = require('./controllers/users/loginController');
 const { newUserController } = require('./controllers/users/newUserController');
 const {
   userProfileController,
 } = require('./controllers/users/userProfileController');
-
+//Controladores links
 const {
   voteLinkController,
 } = require('./controllers/links/voteLinkController');
@@ -20,25 +21,34 @@ const {
 const {
   deleteLinkController,
 } = require('./controllers/links/deleteLinkController');
-
+const {
+  getSingleVotesController,
+} = require('./controllers/links/getSingleVotesController');
+const {
+  getAllLinksWithVotesController,
+} = require('controllers/links/getAllLinksWithVotesController.js');
+//Middlewares express
 const app = express();
 app.use(expressFileUpload());
 app.use(express.json());
 app.use(morgan('dev'));
-app.use('/uploads', express.static('./uploads'));
+// app.use('/uploads', express.static('./uploads'));
+app.use('/default', express.static('./default'));
 
 ///USER
 
 app.post('/user', newUserController);
 app.post('/login', loginController);
 app.get('/user/:id', getUserController);
-app.post('/user/:id/settings', authUser, userProfileController);
+app.put('/user/:id', authUser, userProfileController); //Puede ser un put, No hace falta /profile
 
 //LINKS
-app.post('/', authUser, newLinkController);
-app.get('/', getAllLinksController);
+app.post('/link', authUser, newLinkController);
+app.get('/link', getAllLinksController);
+app.get('/link/votes', getAllLinksWithVotesController);
+app.get('/link/:id', getSingleVotesController);
 app.delete('/link/:id', authUser, deleteLinkController);
-app.post('/link/:id', voteLinkController);
+app.post('/link/:id/votes', authUser, voteLinkController);
 
 //Middleware de error 404
 app.use((req, res) => {

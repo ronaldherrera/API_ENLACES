@@ -1,5 +1,5 @@
 const { createPost } = require('../../db/links/createPost');
-const { validateUrl } = require('../../helpers');
+const { validateUrl } = require('../../validators/validateUrl');
 
 const newLinkController = async (req, res, next) => {
   try {

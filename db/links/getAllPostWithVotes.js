@@ -1,13 +1,14 @@
 const { getConnection } = require('../db');
 
-const getAllPost = async () => {
+const getAllPostWithVotes = async () => {
   let connection;
   try {
     //Añadir con número de likes
     connection = await getConnection();
     const [result] = await connection.query(
-      `SELECT * FROM enlaces ORDER BY created_at DESC`
+      `SELECT e.id, e.url, e.titulo, e.descripcion, COUNT(v.post_id) AS votes FROM enlaces e, votes v WHERE e.id=v.post_id GROUP BY e.id `
     );
+    console.log(result);
     return result;
   } finally {
     if (connection) {
@@ -15,4 +16,4 @@ const getAllPost = async () => {
     }
   }
 };
-module.exports = { getAllPost };
+module.exports = { getAllPostWithVotes };

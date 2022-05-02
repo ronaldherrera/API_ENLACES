@@ -1,11 +1,12 @@
 const { getConnection } = require('../db');
 
 const userProfile = async (
+  userName,
   nombre,
+  email,
   imagen,
   biografia,
   telefono,
-  direccion,
   id
 ) => {
   let connection;
@@ -13,9 +14,9 @@ const userProfile = async (
     connection = await getConnection();
     const [result] = await connection.query(
       `
-    UPDATE users  SET nombre = ?, imagen = ?, biografia = ?, telefono = ?, direccion = ?
+    UPDATE users  SET userName=?,nombre = ?, email = ? ,imagen = ?, biografia = ?, telefono = ?
     WHERE id=?`,
-      [nombre, imagen, biografia, telefono, direccion, id]
+      [userName, nombre, email, imagen, biografia, telefono, id]
     );
     return result.insertId;
   } finally {

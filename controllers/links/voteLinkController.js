@@ -1,8 +1,15 @@
+const { votePost } = require('../../db/links/votePost');
+// const { validateVotes } = require('../../validators/validateVotes');
 const voteLinkController = async (req, res, next) => {
   try {
-    res.status({
-      status: 'error',
-      message: 'Not implemented',
+    const { id } = req.params;
+    const userId = req.userId;
+
+    await votePost(id, userId);
+
+    res.send({
+      status: 'ok',
+      message: 'Voto enviado',
     });
   } catch (error) {
     next(error);
